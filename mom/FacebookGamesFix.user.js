@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Lexulous
+// @name         FB Games
 // @version      0.1
-// @description  Fix Lexulous Issues
+// @description  Fix Facebook Games Issues
 // @author       You
-// @match        https://apps.facebook.com/lexulous/*
+// @match        https://apps.facebook.com/*/*
 // @require      https://code.jquery.com/jquery-3.4.1.min.js
 // @run-at       document-end
 // @grant        none

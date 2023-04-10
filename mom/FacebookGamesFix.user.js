@@ -9,6 +9,7 @@
 // @grant        none
 // ==/UserScript==
 
+var alreadyRunning = false;
 
 function fix( nTimes )
 {
@@ -22,7 +23,19 @@ function fix( nTimes )
         return;
     }
 
+    if( 'hidden' == loc.first().css( 'overflow-y' ) )
+    {
+        return;
+    }
+
     loc.first().css( { overflowY: 'hidden' } );
+
+    if( !alreadyRunning )
+    {
+        alreadyRunning = true;
+
+        $( 'body' ).bind( 'DOMSubtreeModified', function() { fix( 10 ); } );
+    }
 }
 
 fix( 10 );

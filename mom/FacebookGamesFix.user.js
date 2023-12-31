@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         FB Games
-// @version      0.2
+// @version      0.3
 // @description  Fix Facebook Games Issues
 // @author       You
 // @match        https://apps.facebook.com/*/*
@@ -69,8 +69,8 @@ function lexulous()
 {
     /*
         TODO
-        - split list at selected game (not starting at first game)
-        - play => next button update
+        - play => next button update (flash...)
+        - does iframe get JSON games list?
     */
 
     if( window.location.href.includes( 'apps.facebook' ) ) // runs in iframe
@@ -81,10 +81,21 @@ function lexulous()
         if( $( 'a:contains("Next Game")' ).length ) // game
         {
             let lnk = $( 'a:contains("Next Game")' );
-            let next = data.lexulous.games.shift();
+            let gid = window.location.href.split( 'gid=' );
+            let next = null;
+
+            if( gid.length )
+            {
+                gid = gid[1].split( '&' )[0];
+                next = data.lexulous.games.filter( x => x.includes( gid ) )[0];
+                let ndx = data.lexulous.games.indexOf( next ) + 1;
+                data.lexulous.games = data.lexulous.games.slice( ndx ).concat( data.lexulous.games.slice( 0, ndx ) );
+            }
+
+            next = data.lexulous.games.shift();
+            data.lexulous.games.push( next );
             lnk.attr( 'href', next );
 
-            data.lexulous.games.push( next );
             GM_setValue( 'data', data );
 
             return;

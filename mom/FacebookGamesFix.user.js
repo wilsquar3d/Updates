@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         FB Games
-// @version      0.3
+// @version      0.4
 // @description  Fix Facebook Games Issues
 // @author       You
 // @match        https://apps.facebook.com/*/*
@@ -61,7 +61,7 @@ function fix( nTimes )
     {
         alreadyRunning = true;
 
-        $( 'body' ).bind( 'DOMSubtreeModified', function() { fix( 10 ); } );
+        watchDom( function() { fix( 10 ); } );
     }
 }
 
@@ -122,6 +122,25 @@ function lexulous()
     }
 
     setTimeout( lexulous, dataPages.lexulous.delay );
+}
+
+function watchDom( handlerFunc, selector, defaultConifg = { childList: true, characterData: false, attributes: false, subtree: true } )
+{
+    let MutationObserver = window.MutationObserver || window.WebKitMutationObserver || unsafeWindow.MutationObserver || unsafeWindow.WebKitMutationObserver;
+    let observer = new MutationObserver( handlerFunc );
+    let observerConfig = {
+        childList: defaultConifg.childList,
+        characterData: defaultConifg.characterData,
+        attributes: defaultConifg.attributes,
+        subtree: defaultConifg.subtree
+    };
+
+    $( selector || 'body' ).each(
+        function()
+        {
+            observer.observe( this, observerConfig );
+        }
+    );
 }
 
 startup();
